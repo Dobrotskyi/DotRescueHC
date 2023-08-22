@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Score : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI _scoreText;
     public static float CurrentScore { private set; get; } = 0;
 
+    [SerializeField] private TextMeshProUGUI _scoreText;
 
     private void Awake()
     {
@@ -15,6 +15,8 @@ public class Score : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.GameIsOver)
+            return;
         CurrentScore += GameManager.ScoreReward * Time.fixedDeltaTime;
         _scoreText.text = ((int)CurrentScore).ToString();
     }

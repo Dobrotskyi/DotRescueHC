@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static event Action PlayerLost;
+
     [SerializeField] private GameObject _explosionPrefab;
+    [SerializeField] private GameObject _playersDot;
 
     private float _rotationSpeed;
     private bool _antiClockwise = true;
@@ -38,6 +42,8 @@ public class Player : MonoBehaviour
 
     private void DestroySelf()
     {
-
+        Instantiate(_explosionPrefab, _playersDot.transform.position, Quaternion.identity);
+        _playersDot.SetActive(false);
+        PlayerLost?.Invoke();
     }
 }

@@ -1,13 +1,17 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static event Action<float> SpeedChanged;
 
-    public static int CurrentLevel { private set; get; } = 0;
-    public static int ScoreReward => _scoreRewardByLevel[CurrentLevel];
+    public static bool GameIsOver = false;
+    public static int ScoreReward => _scoreRewardByLevel[s_currentLevel];
+    private static int s_currentLevel { set; get; } = 0;
+
 
     [SerializeField] private static List<int> _scoreRewardByLevel = new() { 10, 20, 30, 40, 50 };
 
@@ -17,22 +21,42 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        CurrentLevel = 0;
-        SpeedChanged?.Invoke(_obstacleSpeedByLevel[CurrentLevel]);
+        s_currentLevel = 0;
+        SpeedChanged?.Invoke(_obstacleSpeedByLevel[s_currentLevel]);
+        GameIsOver = false;
+        Player.PlayerLost += GameOver;
+    }
+
+    private void OnDisable()
+    {
+        Player.PlayerLost -= GameOver;
     }
 
     private void LateUpdate()
     {
-        if (!_maxLevelReached && _scoreToFinishLevel[CurrentLevel] <= Score.CurrentScore)
+        if (!_maxLevelReached && _scoreToFinishLevel[s_currentLevel] <= Score.CurrentScore)
         {
-            CurrentLevel++;
-            if (CurrentLevel == _scoreToFinishLevel.Count)
+            s_currentLevel++;
+            if (s_currentLevel == _scoreToFinishLevel.Count)
             {
                 _maxLevelReached = true;
-                CurrentLevel--;
+                s_currentLevel--;
                 return;
             }
-            SpeedChanged?.Invoke(_obstacleSpeedByLevel[CurrentLevel]);
+            SpeedChanged?.Invoke(_obstacleSpeedByLevel[s_currentLevel]);
         }
+    }
+
+    private void GameOver()
+    {
+        GameIsOver = true;
+        StartCoroutine(GoBackToMenu());
+        PlayerScoreTracker.Instance.UpdateScore();
+    }
+
+    private IEnumerator GoBackToMenu()
+    {
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene("MainMenu");
     }
 }

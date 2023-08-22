@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerScoreTracker : Singleton
+public class PlayerScoreTracker : Singleton<PlayerScoreTracker>
 {
     private const string HIGHSCORE_KEY = "HighScore";
     private const string LAST_SCORE_KEY = "LastScore";
@@ -28,12 +28,10 @@ public class PlayerScoreTracker : Singleton
         }
     }
 
-    public void UpdateHighScore()
+    public void UpdateScore()
     {
-        if (LastScore > HighScore)
-            PlayerPrefs.SetInt(HIGHSCORE_KEY, LastScore);
+        if (Score.CurrentScore > HighScore)
+            PlayerPrefs.SetInt(HIGHSCORE_KEY, (int)Score.CurrentScore);
+        PlayerPrefs.SetInt(LAST_SCORE_KEY, (int)Score.CurrentScore);
     }
-
-    public void UpdateLastScore(int lastScore) => PlayerPrefs.SetInt(LAST_SCORE_KEY, lastScore);
-
 }

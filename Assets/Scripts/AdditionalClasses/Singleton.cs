@@ -1,13 +1,13 @@
-public class Singleton
+public class Singleton<T> where T : new()
 {
-    private static Singleton instance;
+    private static T instance;
     protected Singleton() { }
-    public static Singleton Instance
+    public static T Instance
     {
         get
         {
             if (instance == null)
-                instance = new();
+                instance = new T();
             return instance;
         }
     }
