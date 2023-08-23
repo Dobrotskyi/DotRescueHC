@@ -7,11 +7,16 @@ public class Player : MonoBehaviour
 
     [SerializeField] private GameObject _explosionPrefab;
     [SerializeField] private GameObject _playersDot;
+    [SerializeField] private AudioSource _audioSource;
 
     private float _rotationSpeed;
     private bool _antiClockwise = true;
 
-    public void ChangeDirection() => _antiClockwise = !_antiClockwise;
+    public void ChangeDirection()
+    {
+        _antiClockwise = !_antiClockwise;
+        _audioSource.Play();
+    }
 
     private void Awake()
     {

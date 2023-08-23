@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private List<float> _obstacleSpeedByLevel;
     [SerializeField] private List<float> _scoreToFinishLevel;
+    [SerializeField] private AudioSource _audioSource;
+
     private bool _maxLevelReached = false;
 
     private void Start()
@@ -50,13 +52,16 @@ public class GameManager : MonoBehaviour
     private void GameOver()
     {
         GameIsOver = true;
+        _audioSource.Play();
         StartCoroutine(GoBackToMenu());
         PlayerScoreTracker.Instance.UpdateScore();
     }
 
     private IEnumerator GoBackToMenu()
     {
-        yield return new WaitForSeconds(2);
+        while (_audioSource.isPlaying)
+            yield return new WaitForEndOfFrame();
+
         SceneManager.LoadScene("MainMenu");
     }
 }
