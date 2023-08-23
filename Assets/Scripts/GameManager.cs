@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
         SpeedChanged?.Invoke(_obstacleSpeedByLevel[s_currentLevel]);
         GameIsOver = false;
         Player.PlayerLost += GameOver;
+        Application.targetFrameRate = 60;
     }
 
     private void OnDisable()

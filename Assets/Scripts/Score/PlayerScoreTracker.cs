@@ -4,7 +4,6 @@ public class PlayerScoreTracker : Singleton<PlayerScoreTracker>
 {
     private const string HIGHSCORE_KEY = "HighScore";
     private const string LAST_SCORE_KEY = "LastScore";
-    private int _lastScore = 0;
 
     public int HighScore
     {
